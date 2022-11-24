@@ -25,7 +25,6 @@ connect() {
         --no-proxy \
         --certificate "pkcs11:model=eToken;object=$object_id" \
         --passwd-on-stdin \
-        --background \
         "$VPN_URL"
 }
 
