@@ -32,7 +32,7 @@ COPY vpnc-script /etc/vpnc/vpnc-script
 RUN chmod 755 /etc/vpnc/vpnc-script
 
 # Install SSH
-RUN apt-get install -y expect ssh
+RUN apt-get install -y expect ssh gettext
 RUN mkdir /root/.ssh
 
 COPY ssh_forward.conf /etc/ssh/ssh_config.d/ssh_forward.conf
