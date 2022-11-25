@@ -4,6 +4,9 @@ timeout=10
 object_id=""
 
 connect() {
+    if [ ! -z "$1" ] && [ "$1" -eq 1 ]; then
+        OPENCONNECT_OPTIONS+=" --background"
+    fi
     echo "$TOKEN_PIN" | exec /usr/sbin/openconnect \
         --no-proxy \
         --certificate "pkcs11:model=eToken;object=$object_id" \
@@ -35,8 +38,9 @@ check() {
 main() {
     echo "Init SSH Agent..."
     /token.sh ssh-agent
-    until (connect); do
-        echo "Connection failed. Reconnecting in $timeout seconds..."
+    echo "Connect to VPN..."
+    until connect; do
+        echo "Reconnect in $timeout seconds..."
         sleep $timeout
     done
 }

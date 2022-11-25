@@ -17,5 +17,5 @@ services:
     ports:
       - "8889:8889"
     # optional
-    # volumes:
-    #   - ./ssh_config:/root/.ssh/config_template
+    #volumes:
+      # - ./ssh_config:/root/.ssh/config_template
