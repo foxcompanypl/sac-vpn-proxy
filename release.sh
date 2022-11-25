@@ -1,6 +1,5 @@
 #/bin/bash
-USERNAME=liskeee
-IMAGE=sac-vpn-proxy
+REPO=$(git config --get remote.origin.url | grep -Po "(?<=git@github\.com:)(.*?)(?=.git)")
 #
 branch=$(git symbolic-ref --short HEAD)
 version=""
@@ -17,7 +16,7 @@ else
     version=$(git log -1 --pretty=format:%h)
     latestVersion="$branch"
 fi
-docker build -t $USERNAME/$IMAGE:$version --no-cache ./build
-docker tag $USERNAME/$IMAGE:$version $USERNAME/$IMAGE:$latestVersion
-docker push $USERNAME/$IMAGE:$version
-docker push $USERNAME/$IMAGE:$latestVersion
+docker build -t $REPO:$version --no-cache ./build
+docker tag $REPO:$version $REPO:$latestVersion
+docker push $REPO:$version
+docker push $REPO:$latestVersion
