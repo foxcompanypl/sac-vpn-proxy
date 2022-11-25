@@ -45,7 +45,7 @@ RUN apt-get autoremove -y \
     && rm -rf /tmp/pear
 
 WORKDIR /root
-COPY entrypoint.sh run.sh /
+COPY entrypoint.sh token.sh run.sh /
 ENTRYPOINT [ "/entrypoint.sh" ]
 CMD ["/run.sh"]
 EXPOSE 8889

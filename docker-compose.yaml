@@ -5,13 +5,15 @@ services:
     container_name: vpn
     privileged: true
     restart: always
+    build:
+      context: ./build
     image: liskeee/sac-vpn-proxy
     cap_add:
       - NET_ADMIN
     env_file:
       - .env
     devices:
-      - /dev/bus/usb/001/002:/dev/bus/usb/001/002
+      - /dev/bus/usb:/dev/bus/usb
     ports:
       - "8889:8889"
     # optional

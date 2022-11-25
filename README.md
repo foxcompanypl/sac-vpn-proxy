@@ -5,19 +5,28 @@ This is a Docker image for SafetNetClient VPN. It is based on Debian and using:
 - SafeNetClient
 - PKCS11
 - Microsocks
-
+- vpn-slice
 
 ## Environment variables
 
-```
+```env
 TOKEN_PIN=123456
 VPN_URL=https://vpn.example.com
+OPENCONNECT_OPTIONS= #additional options for openconnect
 ```
 
 ## Running
 
+### Basic
+
 ```bash
 docker run -it --rm --privileged --env-file=.env -p 8889:8889 --device /dev/bus/usb:/dev/bus/usb liskeee/sac-vpn-proxy:latest
+```
+
+### Token Script
+    
+```bash
+docker run -it --rm --privileged --env-file=.env -p 8889:8889 --device /dev/bus/usb:/dev/bus/usb liskeee/sac-vpn-proxy:latest /token.sh {find|object|ssh-agent}
 ```
 
 ## Proxy
@@ -47,14 +56,14 @@ Remember to check `SOCKS v5` and `Remote DNS`.
 Create new ssh config file and mount it to container (path=`/root/.ssh/config_template`).
 
 ```bash
-docker compose exec sac bash -c 'ssh zcpd'
+docker compose exec vpn bash -c 'ssh zcpd'
 ```
 
 ### SSH with Password
 
 ```config
 Host zcpd
-    HostName zcpd
-    User zcpd
+    HostName 10.0.0.1
+    User user
     ProxyCommand ncat --proxy localhost:8889 --proxy-type socks5 %h %p
 ```
