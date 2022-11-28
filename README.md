@@ -69,3 +69,16 @@ Host zcpd
     User user
     ProxyCommand ncat --proxy localhost:8889 --proxy-type socks5 %h %p
 ```
+
+## Scripts
+
+### Device.sh
+
+```bash
+> ./device.sh
+# shows usb device path
+# example: /dev/bus/usb/001/001
+> ./device.sh save
+# saves device path to .env file
+# example: Saved to .env
+```
