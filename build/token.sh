@@ -1,15 +1,13 @@
 #!/bin/bash
 
-readonly lib=/usr/lib/libeTPkcs11.so
-
 find() {
-    echo $(p11tool --list-token-urls --provider $lib | grep eToken)
+    echo $(p11tool --list-token-urls --provider $PKCS11_MODULE_LIB | grep eToken)
 }
 
 get_object() {
     local token=$(find)
     if [ ! -z "$token" ]; then
-        local object=$(p11tool --list-all $token | grep ";type=public" | grep -E -o 'object\=([0-9]+)' | grep -E -o '[0-9]+')
+        local object=$(p11tool --list-all $token --provider $PKCS11_MODULE_LIB | grep ";type=public" | grep -E -o 'object\=([0-9]+)' | grep -E -o '[0-9]+')
         echo $object
     else
         echo ""
@@ -21,17 +19,17 @@ init_ssh_agent() {
         echo "Token not found!"
         exit 1
     fi
-
-    eval $(ssh-agent)
+    if [ -z "$SSH_AUTH_SOCK" ]; then
+        eval $(ssh-agent)
+        echo "export SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >>.bashrc
+    fi
     echo "Add ssh key to ssh-agent..."
     expect -c "
-        spawn ssh-add -s $lib
+        spawn ssh-add -s $PKCS11_MODULE_LIB
         expect \"Enter passphrase for \"
         send -- \"$TOKEN_PIN\r\"
         interact
     "
-    echo "export SSH_AGENT_PID=$SSH_AGENT_PID" >>.bashrc
-    echo "export SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >>.bashrc
 }
 
 main() {

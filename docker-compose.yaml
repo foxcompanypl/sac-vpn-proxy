@@ -2,9 +2,8 @@ version: "3.8"
 
 services:
   vpn:
-    container_name: vpn
     privileged: true
-    restart: always
+    restart: unless-stopped
     build:
       context: ./build
     image: liskeee/sac-vpn-proxy
@@ -13,9 +12,9 @@ services:
     env_file:
       - .env
     devices:
-      - /dev/bus/usb:/dev/bus/usb
+      - $TOKEN_USB_DEVICE:/dev/bus/usb/001/001
     ports:
       - "8889:8889"
-    # optional
-    #volumes:
-      # - ./ssh_config:/root/.ssh/config_template
+    volumes:
+      # Optional ssh config to configure ssh client sessions inside the container
+      - ./ssh_config:/root/.ssh/config_template

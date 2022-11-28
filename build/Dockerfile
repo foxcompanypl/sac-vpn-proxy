@@ -1,5 +1,8 @@
 FROM debian:stable-slim
 
+ENV SSH_AUTH_SOCK /tmp/ssh-sock/agent.sock
+ENV PKCS11_MODULE_LIB /usr/lib/libeTPkcs11.so
+
 RUN apt-get update 
 RUN apt-get install -y wget unzip \
     opensc opensc-pkcs11 pcscd libengine-pkcs11-openssl libpam-pkcs11 \
@@ -22,7 +25,7 @@ RUN wget https://www.digicert.com/StaticFiles/SAC_10_7_Linux_GA.zip \
 
 # Add PKCS11 module
 RUN mkdir -p /etc/pkcs11/modules \
-    && echo "module: /usr/lib/libeTPkcs11.so" | tee "/etc/pkcs11/modules/etoken.conf"
+    && echo "module: $PKCS11_MODULE_LIB" | tee "/etc/pkcs11/modules/etoken.conf"
 
 # Install Microsocks for proxy
 RUN apt-get install -y microsocks python3 python3-pip \
@@ -32,15 +35,18 @@ RUN chmod 755 /etc/vpnc/vpnc-script
 
 # Install SSH
 RUN apt-get install -y expect ssh gettext-base
-RUN mkdir /root/.ssh
 COPY ssh_forward.conf /etc/ssh/ssh_config.d/ssh_forward.conf
 RUN chmod 644 /etc/ssh/ssh_config.d/ssh_forward.conf
+RUN mkdir -p /root/.ssh
 
 # Cleanup
 RUN apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /tmp/*
+    && rm -rf /tmp/* 
+
+RUN mkdir -p $(dirname $SSH_AUTH_SOCK)
+RUN chmod 700 $(dirname $SSH_AUTH_SOCK)
 
 # Finish
 WORKDIR /root

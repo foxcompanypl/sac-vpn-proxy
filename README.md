@@ -14,6 +14,7 @@ This is a Docker image for SafetNetClient VPN. It is based on Debian and using:
 TOKEN_PIN=123456
 VPN_URL=https://vpn.example.com
 OPENCONNECT_OPTIONS= #additional options for openconnect
+TOKEN_USB_DEVICE=/dev/bus/usb/001/001 #usb device path for token
 ```
 
 ## Running
@@ -21,13 +22,13 @@ OPENCONNECT_OPTIONS= #additional options for openconnect
 ### Basic
 
 ```bash
-docker run -it --rm --privileged --env-file=.env -p 8889:8889 --device /dev/bus/usb:/dev/bus/usb liskeee/sac-vpn-proxy:latest
+> docker run -it --rm --privileged --env-file=.env -p 8889:8889 --device /dev/bus/usb:/dev/bus/usb liskeee/sac-vpn-proxy:latest
 ```
 
 ### Token Script
 
 ```bash
-docker run -it --rm --privileged --env-file=.env -p 8889:8889 --device /dev/bus/usb:/dev/bus/usb liskeee/sac-vpn-proxy:latest /token.sh {find|object|ssh-agent}
+> docker run -it --rm --privileged --env-file=.env -p 8889:8889 --device /dev/bus/usb:/dev/bus/usb liskeee/sac-vpn-proxy:latest /token.sh {find|object|ssh-agent}
 ```
 
 ## Proxy
@@ -37,7 +38,7 @@ Default port is `8889`. Proxy uses SOCKS5 protocol.
 ### GIT
 
 ```bash
-git config [--global] http.proxy socks5h://localhost:8889
+> git config [--global] http.proxy socks5h://localhost:8889
 ```
 
 ### Chrome
@@ -57,8 +58,7 @@ Remember to check `SOCKS v5` and `Remote DNS`.
 Create new ssh config file and mount it to container (path=`/root/.ssh/config_template`).
 
 ```bash
-> docker compose exec vpn bash
-> ssh zcpd
+> docker compose exec vpn ssh zcpd
 ```
 
 ### SSH with Password
