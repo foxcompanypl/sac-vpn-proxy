@@ -8,7 +8,6 @@ connect() {
         OPENCONNECT_OPTIONS+=" --background"
     fi
     echo "$TOKEN_PIN" | exec /usr/sbin/openconnect \
-        --no-proxy \
         --certificate "pkcs11:model=eToken;object=$object_id" \
         --passwd-on-stdin \
         $OPENCONNECT_OPTIONS \

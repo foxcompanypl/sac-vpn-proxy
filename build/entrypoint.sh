@@ -1,8 +1,9 @@
 #!/bin/bash
 
 services() {
-    echo "Starting services..."
+    echo "Starting PCSCD..."
     service pcscd start
+    echo "Starting Proxy..."
     /usr/bin/microsocks -i 0.0.0.0 -p 8889 &
 }
 

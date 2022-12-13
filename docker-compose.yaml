@@ -2,19 +2,18 @@ version: "3.8"
 
 services:
   vpn:
-    privileged: true
     restart: unless-stopped
     build:
       context: ./build
-    image: liskeee/sac-vpn-proxy
+    image: liskeee/sac-vpn-proxy:latest
     cap_add:
       - NET_ADMIN
     env_file:
       - .env
     devices:
-      - $TOKEN_USB_DEVICE:/dev/bus/usb/001/001
+      - ${TOKEN_USB_DEVICE}:/dev/bus/usb/002/002
     ports:
-      - "8889:8889"
+      - ${PROXY_PORT}:8889
     volumes:
       # Optional ssh config to configure ssh client sessions inside the container
       - ./ssh_config:/root/.ssh/config_template

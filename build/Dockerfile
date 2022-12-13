@@ -1,7 +1,8 @@
 FROM debian:stable-slim
 
-ENV SSH_AUTH_SOCK /tmp/ssh-sock/agent.sock
-ENV PKCS11_MODULE_LIB /usr/lib/libeTPkcs11.so
+ENV SAC_VERSION "10_7"
+ENV SSH_AUTH_SOCK "/tmp/ssh-sock/agent.sock"
+ENV PKCS11_MODULE_LIB "/usr/lib/libeTPkcs11.so"
 
 RUN apt-get update 
 RUN apt-get install -y wget unzip \
@@ -18,20 +19,17 @@ RUN wget http://nz2.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.
     && dpkg -i libssl1.1_1.1.0g-2ubuntu4_amd64.deb
 
 # Install SafeNet Authentication Client
-RUN wget https://www.digicert.com/StaticFiles/SAC_10_7_Linux_GA.zip \
-    && unzip SAC_10_7_Linux_GA.zip \
-    && dpkg -i Installation/Standard/DEB/safenetauthenticationclient_10.7.77_amd64.deb \
+RUN wget "https://www.digicert.com/StaticFiles/SAC_${SAC_VERSION}_Linux_GA.zip" \
+    && unzip SAC_${SAC_VERSION}_Linux_GA.zip \
+    && dpkg -i Installation/Standard/DEB/safenetauthenticationclient_*_amd64.deb \
     && apt install --fix-broken -y
 
 # Add PKCS11 module
 RUN mkdir -p /etc/pkcs11/modules \
     && echo "module: $PKCS11_MODULE_LIB" | tee "/etc/pkcs11/modules/etoken.conf"
 
-# Install Microsocks for proxy
-RUN apt-get install -y microsocks python3 python3-pip \
-    && pip3 install https://github.com/dlenski/vpn-slice/archive/master.zip
-COPY vpnc-script /etc/vpnc/vpnc-script
-RUN chmod 755 /etc/vpnc/vpnc-script
+# Install Microsocks
+RUN apt-get install -y microsocks
 
 # Install SSH
 RUN apt-get install -y expect ssh gettext-base
@@ -53,4 +51,5 @@ WORKDIR /root
 COPY entrypoint.sh token.sh run.sh /
 ENTRYPOINT [ "/entrypoint.sh" ]
 CMD ["/run.sh"]
+
 EXPOSE 8889
