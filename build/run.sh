@@ -38,20 +38,8 @@ main() {
     echo "Init SSH Agent..."
     /token.sh ssh-agent
     echo "Connect to VPN..."
-    if [ -z "$1" ]; then
-        until connect; do
-            echo "Reconnect in $timeout seconds..."
-            sleep $timeout
-        done
-    else
-        connect 1
-    fi
+    connect
 }
 
 check
-if [ "$1" == "-b" ]; then
-    echo "[Background mode]"
-    main 1
-else
-    main
-fi
+main
