@@ -24,7 +24,10 @@ RUN wget http://nz2.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.
 RUN wget "https://www.digicert.com/StaticFiles/SAC_${SAC_VERSION}_Linux_GA.zip" \
     && unzip SAC_${SAC_VERSION}_Linux_GA.zip \
     && dpkg -i Installation/Standard/DEB/safenetauthenticationclient_*_amd64.deb \
-    && apt install --fix-broken -y
+    && apt install --fix-broken -y \
+    && rm -rf SAC_${SAC_VERSION}_Linux_GA.zip Installation
+
+WORKDIR /root
 
 # Add PKCS11 module
 RUN mkdir -p /etc/pkcs11/modules \
@@ -40,16 +43,12 @@ RUN chmod 644 /etc/ssh/ssh_config.d/ssh_forward.conf
 RUN mkdir -p /root/.ssh
 
 # Cleanup
-RUN apt-get autoremove -y \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /tmp/* 
+RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN mkdir -p $(dirname $SSH_AUTH_SOCK)
 RUN chmod 700 $(dirname $SSH_AUTH_SOCK)
 
 # Finish
-WORKDIR /root
 COPY entrypoint.sh token.sh run.sh /
 ENTRYPOINT [ "/entrypoint.sh" ]
 CMD ["/run.sh"]
