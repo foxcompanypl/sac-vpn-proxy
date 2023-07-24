@@ -40,10 +40,10 @@ RUN chmod 644 /etc/ssh/ssh_config.d/ssh_forward.conf
 RUN mkdir -p /root/.ssh
 
 # Cleanup
-RUN apt-get autoremove -y \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /tmp/* 
+RUN apt-get autoremove -y; \
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/*; \
+    rm -rf /tmp/* 
 
 RUN mkdir -p $(dirname $SSH_AUTH_SOCK)
 RUN chmod 700 $(dirname $SSH_AUTH_SOCK)
