@@ -1,8 +1,10 @@
 FROM debian:stable-slim
-
-ENV SAC_VERSION "10_7"
+#
 ENV SSH_AUTH_SOCK "/tmp/ssh-sock/agent.sock"
 ENV PKCS11_MODULE_LIB "/usr/lib/libeTPkcs11.so"
+ENV AUTH_MODE "token"
+#
+ARG SAC_VERSION="10_7"
 
 RUN apt-get update 
 RUN apt-get install -y wget unzip \

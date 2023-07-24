@@ -32,22 +32,18 @@ init_ssh_agent() {
     "
 }
 
-main() {
-    case "$1" in
-    find)
-        find
-        ;;
-    object)
-        get_object
-        ;;
-    ssh-agent)
-        init_ssh_agent
-        ;;
-    *)
-        echo "Usage: $0 {find|object|ssh-agent}"
-        exit 1
-        ;;
-    esac
-}
-
-main $@
+case "$1" in
+find)
+    find
+    ;;
+object)
+    get_object
+    ;;
+ssh-agent)
+    init_ssh_agent
+    ;;
+*)
+    echo "Usage: $0 {find|object|ssh-agent}"
+    exit 1
+    ;;
+esac

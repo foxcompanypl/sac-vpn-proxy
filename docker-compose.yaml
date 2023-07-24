@@ -11,7 +11,7 @@ services:
     env_file:
       - .env
     devices:
-      - ${TOKEN_USB_DEVICE}:${TOKEN_USB_DEVICE}
+      - ${TOKEN_USB_DEVICE}:${TOKEN_USB_DEVICE} # remove if not using a token
     ports:
       - ${PROXY_PORT}:8889
     volumes:
