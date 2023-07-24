@@ -10,7 +10,7 @@ jobs:
       contents: read
       packages: write
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v3
       - name: Log in to Docker Hub
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
@@ -28,4 +28,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository }}:latest,ghcr.io/${{ github.repository }}:${{ github.ref_name }},${DOCKER_IMAGE_NAME}:latest,${DOCKER_IMAGE_NAME}:${{ github.ref_name }}
+          tags: ghcr.io/${{ github.repository }}:latest,ghcr.io/${{ github.repository }}:${{ github.ref_name }},${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest,${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.ref_name }}
